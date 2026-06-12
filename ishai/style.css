@@ -9,7 +9,7 @@ body {
 
 #capture {
     width: 500px;
-    height: 610px;
+    height: 590px;
     background-size: cover;
     background-position: center;
     position: relative;
@@ -141,8 +141,7 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center; /* ממקם את הטקסטים במרכז הבלוק */
-    padding-left: 15px;
-
+    padding-left: 5px;
     pointer-events: none;
     width: auto; /* הבלוק יהיה ברוחב התוכן ולא ימתח סתם */
 }
@@ -163,7 +162,6 @@ button {
     font-weight: 700;
     color: #ffffff;
     text-shadow: -1px -1px 0 #0d47a1, 1px -1px 0 #0d47a1, -1px 1px 0 #0d47a1, 1px 1px 0 #0d47a1, 0 0 3px #1565c0;
-    margin-top: 2px;
     text-align: center; /* הטקסט עצמו במרכז */
 }
 @media (max-width: 550px) {
