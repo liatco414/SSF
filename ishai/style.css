@@ -1,0 +1,211 @@
+body {
+    font-family: "Assistant", "Segoe UI", Tahoma, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f0f0f0;
+    padding: 20px;
+}
+
+#capture {
+    width: 500px;
+    height: 630px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 2px solid black;
+    overflow: hidden;
+}
+
+.top-section {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 15px; /* מרווח בין הלוגו לטבלה */
+}
+
+.glass-box {
+    background: rgba(255, 255, 255, 0.514);
+    backdrop-filter: blur(2px);
+    width: 85%; /* הקטנתי את הרוחב כדי שלא יהיה צמוד לקצוות */
+    height: fit-content; /* התיבה מתאימה את עצמה לתוכן בדיוק */
+    flex-grow: 0; /* מונע מהתיבה להימתח על כל השטח */
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logo-img {
+    max-width: 180px;
+    height: auto;
+    display: block;
+    margin: 0 auto 5px auto;
+}
+
+.org-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: 0 0 3px #b71c1c, 0 0 5px #b71c1c;
+    line-height: 1.1;
+    margin-bottom: 2px;
+}
+
+.verse {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 0 3px #b71c1c;
+    font-style: italic;
+}
+
+#header-parasha,
+.date-text {
+    color: #000000 !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 !important;
+    line-height: 1.2;
+    text-align: center;
+    margin: 3px;
+}
+
+table {
+    width: 100%;
+    margin-top: 5px;
+    border-collapse: collapse;
+    border-top: 2px solid #000;
+    font-size: 1rem; /* טקסט קטן בטבלה */
+    table-layout: fixed;
+    direction: rtl;
+}
+
+/* כותרות הטבלה נשארות אדומות */
+th {
+    color: #ff0a0a;
+    padding: 4px 1px;
+}
+
+/* העמודה הראשונה - שמות הערים - יהיו באדום */
+td:first-child {
+    color: #ff0a0a; /* אדום */
+    text-align: right; /* יישור לימין כמו שסיכמנו */
+    padding-right: 8px;
+    font-weight: bold;
+}
+
+/* כל שאר העמודות - השעות - יהיו בשחור */
+td:not(:first-child) {
+    color: #000000; /* שחור */
+    text-align: center;
+    font-weight: bold;
+}
+
+/* הגדרות כלליות לכל התאים */
+td {
+    padding: 4px 1px;
+}
+
+/* קווים מפרידים */
+tbody tr:not(:last-child) td {
+    border-bottom: 1px solid #333;
+}
+
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+/* מיכל הטקסט התחתון */
+/* מיכל הפוטר - צמוד לשמאל ולמטה */
+.footer-container {
+    margin-top: auto; /* דוחף את הפוטר לתחתית */
+    align-self: flex-start; /* מצמיד את כל הבלוק לצד שמאל */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ממקם את הטקסטים במרכז הבלוק */
+    padding-left: 15px;
+
+    pointer-events: none;
+    width: auto; /* הבלוק יהיה ברוחב התוכן ולא ימתח סתם */
+}
+
+/* שבת שלום - עם העיצוב המקורי */
+.shabbat-shalom {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    text-shadow: -1px -1px 0 #0d47a1, 1px -1px 0 #0d47a1, -1px 1px 0 #0d47a1, 1px 1px 0 #0d47a1, 0 0 5px #1565c0, 0 0 10px #1565c0;
+    line-height: 1;
+    text-align: center; /* הטקסט עצמו במרכז */
+}
+
+/* אתר - עם העיצוב המקורי */
+.website {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: -1px -1px 0 #0d47a1, 1px -1px 0 #0d47a1, -1px 1px 0 #0d47a1, 1px 1px 0 #0d47a1, 0 0 3px #1565c0;
+    margin-top: 2px;
+    text-align: center; /* הטקסט עצמו במרכז */
+}
+@media (max-width: 550px) {
+    #capture {
+        width: 100%; /* תופס 95% מרוחב המסך */
+        height: 100%; /* משחרר את הגובה הקבוע */
+    }
+
+    .org-title {
+        font-size: 1.3rem;
+    }
+    .verse {
+        font-size: 1rem;
+    }
+    .shabbat-shalom {
+        font-size: 1.2rem;
+    }
+    .website {
+        font-size: 0.9rem;
+    }
+
+    .glass-box {
+        padding: 10px;
+    }
+    .footer-container {
+        margin-top: 50px;
+    }
+}
+
+/* אם המסך ממש קטן (פחות מ-400px) */
+@media (max-width: 1000px) {
+    .org-title {
+        font-size: 1.1rem;
+    }
+    .verse {
+        font-size: 0.8rem;
+    }
+    #header-parasha,
+    .date-text {
+        font-size: 0.8rem;
+    }
+    table {
+        font-size: 0.7rem;
+    }
+}
