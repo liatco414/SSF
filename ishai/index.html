@@ -188,12 +188,40 @@
             });
 
             function downloadImage() {
-                html2canvas(document.getElementById("capture"), { useCORS: true }).then((canvas) => {
-                    const link = document.createElement("a");
-                    link.download = "shabbat-times.png";
-                    link.href = canvas.toDataURL("image/png");
-                    link.click();
+                const captureElement = document.getElementById("capture");
+
+                html2canvas(captureElement, { useCORS: true }).then((canvas) => {
+                    // הפיכת הקנבס לקובץ (Blob)
+                    canvas.toBlob((blob) => {
+                        const file = new File([blob], "shabbat-times.png", { type: "image/png" });
+
+                        // בדיקה אם הדפדפן תומך בשיתוף (מובייל בדרך כלל)
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            navigator
+                                .share({
+                                    files: [file],
+                                    title: "זמני שבת",
+                                    text: "זמני כניסת ויציאת שבת",
+                                })
+                                .catch((err) => {
+                                    console.log("Error sharing:", err);
+                                    // אם משהו השתבש, הורדה רגילה
+                                    fallbackDownload(canvas);
+                                });
+                        } else {
+                            // אם אין תמיכה בשיתוף (מחשב), נוריד רגיל
+                            fallbackDownload(canvas);
+                        }
+                    }, "image/png");
                 });
+            }
+
+            // פונקציית עזר להורדה רגילה
+            function fallbackDownload(canvas) {
+                const link = document.createElement("a");
+                link.download = "shabbat-times.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
             }
 
             fetchTimes();
