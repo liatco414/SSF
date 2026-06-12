@@ -29,7 +29,7 @@ body {
 }
 
 .glass-box {
-    background: rgba(255, 255, 255, 0.514);
+    background: rgba(255, 255, 255, 0.728);
     backdrop-filter: blur(2px);
     width: 85%; /* הקטנתי את הרוחב כדי שלא יהיה צמוד לקצוות */
     height: fit-content; /* התיבה מתאימה את עצמה לתוכן בדיוק */
