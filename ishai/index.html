@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&display=swap" rel="stylesheet" />
+        <meta charset="UTF-8" />
+        <title>Generator זמני שבת</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <style>
+            body {
+                font-family: "Assistant", "Segoe UI", Tahoma, sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background: #f0f0f0;
+                padding: 20px;
+            }
+
+            #capture {
+                width: 500px;
+                height: 600px;
+                background-size: cover;
+                background-position: center;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                box-sizing: border-box;
+                border: 2px solid black;
+                overflow: hidden;
+            }
+
+            .top-section {
+                text-align: center;
+                width: 100%;
+                margin-bottom: 15px; /* מרווח בין הלוגו לטבלה */
+            }
+
+            .glass-box {
+                background: rgba(255, 255, 255, 0.45);
+                backdrop-filter: blur(2px);
+                width: 85%; /* הקטנתי את הרוחב כדי שלא יהיה צמוד לקצוות */
+                height: fit-content; /* התיבה מתאימה את עצמה לתוכן בדיוק */
+                flex-grow: 0; /* מונע מהתיבה להימתח על כל השטח */
+                display: flex;
+                flex-direction: column;
+                padding: 15px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            .logo-img {
+                max-width: 180px;
+                height: auto;
+                display: block;
+                margin: 0 auto 5px auto;
+            }
+
+            .org-title {
+                font-size: 1.6rem;
+                font-weight: 800;
+                color: #ffffff;
+                text-shadow: 0 0 3px #b71c1c, 0 0 5px #b71c1c;
+                line-height: 1.1;
+                margin-bottom: 2px;
+            }
+
+            .verse {
+                font-size: 1.2rem;
+                font-weight: 700;
+                color: #ffffff;
+                text-shadow: 0 0 3px #b71c1c;
+                font-style: italic;
+            }
+
+            #header-parasha,
+            .date-text {
+                color: #000000 !important;
+                font-weight: 700;
+                font-size: 1.1rem;
+                margin: 0 !important;
+                line-height: 1.2;
+                text-align: center;
+            }
+
+            table {
+                width: 100%;
+                margin-top: 5px;
+                border-collapse: collapse;
+                border-top: 1px solid #000;
+                font-size: 0.9rem; /* טקסט קטן בטבלה */
+                table-layout: fixed;
+            }
+
+            th {
+                color: #b71c1c;
+                padding: 4px 1px;
+            }
+
+            td {
+                padding: 4px 1px;
+                text-align: center;
+                font-weight: bold;
+                color: black;
+            }
+
+            tbody tr:not(:last-child) td {
+                border-bottom: 1px solid #333;
+            }
+
+            .controls {
+                margin-bottom: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+                cursor: pointer;
+                background: #d32f2f;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 1rem;
+            }
+            /* מיכל הטקסט התחתון */
+            .footer-container {
+                position: absolute;
+                bottom: 15px;
+                left: 15px;
+                text-align: center;
+                z-index: 10;
+                pointer-events: none; /* כדי שלא יפריע ללחיצות אם תרצי */
+            }
+
+            .shabbat-shalom {
+                font-size: 1.8rem;
+                font-weight: 800;
+                color: #ffffff;
+                /* זוהר כחול */
+                text-shadow: 0 0 3px #1565c0, 0 0 6px #1565c0, 0 0 10px #1565c0;
+                -webkit-text-stroke: 1px #0d47a1;
+                line-height: 1;
+            }
+
+            .website {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: #ffffff;
+                /* זוהר כחול עדין יותר */
+                text-shadow: 0 0 2px #1565c0, 0 0 4px #1565c0;
+                -webkit-text-stroke: 0.5px #0d47a1;
+                margin-top: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="controls">
+            <label>העלי תמונת רקע:</label>
+            <input type="file" id="bgInput" accept="image/*" />
+            <button onclick="downloadImage()">הורד תמונה</button>
+        </div>
+
+        <div id="capture">
+            <div class="top-section">
+                <img src="הצלה ללא גבולות.png" alt="Logo" class="logo-img" />
+                <div class="org-title">הצלה יו"ש ללא גבולות</div>
+                <div class="verse">"כל המציל נפש אחת כאילו קיים עולם מלא"</div>
+            </div>
+
+            <div class="glass-box">
+                <h2 id="header-parasha">טוען פרשה...</h2>
+                <div id="header-gregorian" class="date-text"></div>
+                <div id="header-hebrew" class="date-text"></div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>כניסת <br />שבת</th>
+                            <th>
+                                צאת <br />
+                                שבת
+                            </th>
+                            <th>
+                                רבנו <br />
+                                תם
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="shabbat-table">
+                        <tr>
+                            <td colspan="4">טוען זמנים...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="footer-container">
+                <div class="shabbat-shalom">שבת שלום</div>
+                <div class="website">www.hatzalah.org.il</div>
+            </div>
+        </div>
+
+        <script>
+            // פונקציה להמרה לגימטריה (עבור ימים ושנים)
+            function toGematria(num) {
+                const units = { 1: "א", 2: "ב", 3: "ג", 4: "ד", 5: "ה", 6: "ו", 7: "ז", 8: "ח", 9: "ט" };
+                const tens = { 10: "י", 20: "כ", 30: "ל", 40: "מ", 50: "נ", 60: "ס", 70: "ע", 80: "פ", 90: "צ" };
+                const hundreds = { 100: "ק", 200: "ר", 300: "ש", 400: "ת", 500: "תק", 600: "תר", 700: "תש", 800: "תת" };
+
+                if (num === 15) return 'ט"ו';
+                if (num === 16) return 'ט"ז';
+
+                let res = "";
+
+                // טיפול במאות (לשנה 5786)
+                if (num >= 5000) num -= 5000;
+
+                let h = Math.floor(num / 100) * 100;
+                let t = Math.floor((num % 100) / 10) * 10;
+                let u = num % 10;
+
+                if (h > 0) res += hundreds[h];
+                if (t > 0) res += tens[t];
+                if (u > 0) res += units[u];
+
+                // תיקון קל לגימטריה: החלפת "כ"ז" ב-"כ"ז" (הוספת גרשיים אם צריך, כאן נעשה זאת ידנית)
+                return res.length > 1 ? res.slice(0, -1) + '"' + res.slice(-1) : res;
+            }
+
+            const cityOffsets = {
+                ירושלים: { entry: -17, exit: 0, rt: 30 },
+                "תל אביב": { entry: -2, exit: 1, rt: 30 },
+                חברון: { entry: 3, exit: 1, rt: 30 },
+                "בקעת הירדן": { entry: -11, exit: 1, rt: 30 },
+                שומרון: { entry: 1, exit: 1, rt: 33 },
+                חיפה: { entry: -9, exit: 0, rt: 33 },
+                "באר שבע": { entry: -1, exit: 0, rt: 33 },
+            };
+
+            const cities = [
+                { name: "ירושלים", lat: 31.7683, lon: 35.2137 },
+                { name: "תל אביב", lat: 32.0853, lon: 34.7818 },
+                { name: "חברון", lat: 31.5326, lon: 35.1023 },
+                { name: "בקעת הירדן", lat: 32.0, lon: 35.4 },
+                { name: "שומרון", lat: 32.277, lon: 35.195 },
+                { name: "חיפה", lat: 32.794, lon: 34.9896 },
+                { name: "באר שבע", lat: 31.2529, lon: 34.7915 },
+            ];
+
+            async function fetchTimes() {
+                const tbody = document.getElementById("shabbat-table");
+                tbody.innerHTML = "";
+
+                const firstCity = cities[0];
+                try {
+                    const url = `https://www.hebcal.com/shabbat/?cfg=json&latitude=${firstCity.lat}&longitude=${firstCity.lon}&he=on&t=${Date.now()}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    // 1. ניסיון למצוא פרשה ב-Items או בכותרת
+                    // מחפשים את הפריט שבו הקטגוריה היא "parashat"
+                    const parashatItem = data.items.find((item) => item.category === "parashat");
+
+                    // שולפים את הערך מהשדה "hebrew"
+                    const parashaName = parashatItem ? parashatItem.hebrew : "פרשת השבוע";
+
+                    // שימוש בתוצאה
+                    document.getElementById("header-parasha").innerText = parashaName;
+                    ("שבת");
+
+                    const candlesItem = data.items.find((i) => i.category === "candles");
+
+                    if (candlesItem) {
+                        const fri = new Date(candlesItem.date);
+                        const sat = new Date(fri);
+                        sat.setDate(fri.getDate() + 1);
+
+                        // עדכון כותרת (פרשה)
+                        document.getElementById("header-parasha").innerText = `זמני הדלקת נרות שבת ${parashaName}`;
+
+                        // 2. תאריכים לועזיים
+                        document.getElementById("header-gregorian").innerText = `${fri.toLocaleDateString("he-IL", { day: "numeric", month: "numeric" })} - ${sat.toLocaleDateString("he-IL", {
+                            day: "numeric",
+                            month: "numeric",
+                        })} 2026`;
+
+                        // 3. תאריכים עבריים עם גימטריה
+                        // מחלצים יום ושנה עברית ידנית לפי המערכת
+                        const hebrewDayFri = parseInt(fri.toLocaleDateString("he-IL", { day: "numeric", calendar: "hebrew" }));
+                        const hebrewDaySat = parseInt(sat.toLocaleDateString("he-IL", { day: "numeric", calendar: "hebrew" }));
+                        const hebrewYear = parseInt(fri.toLocaleDateString("he-IL", { year: "numeric", calendar: "hebrew" }));
+
+                        document.getElementById("header-hebrew").innerText = `${toGematria(hebrewDayFri)} - ${toGematria(hebrewDaySat)} ${toGematria(hebrewYear)}`;
+                    }
+
+                    // טבלת ערים
+                    for (let city of cities) {
+                        const cityUrl = `https://www.hebcal.com/shabbat/?cfg=json&latitude=${city.lat}&longitude=${city.lon}&he=on&t=${Date.now()}`;
+                        const res = await fetch(cityUrl);
+                        const d = await res.json();
+
+                        const candles = d.items.find((i) => i.category === "candles");
+                        const havdalah = d.items.find((i) => i.category === "havdalah");
+
+                        if (candles && havdalah) {
+                            const offsets = cityOffsets[city.name] || { entry: 0, exit: 0, rt: 30 };
+                            const entryTime = new Date(new Date(candles.date).getTime() + offsets.entry * 60000);
+                            const exitTime = new Date(new Date(havdalah.date).getTime() + offsets.exit * 60000);
+                            const rtTime = new Date(new Date(havdalah.date).getTime() + offsets.rt * 60000);
+
+                            const format = (d) => d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
+
+                            tbody.innerHTML += `<tr>
+                            <td>${city.name}</td>
+                            <td>${format(entryTime)}</td>
+                            <td>${format(exitTime)}</td>
+                            <td>${format(rtTime)}</td>
+                        </tr>`;
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+
+            // ... (שאר הקוד נשאר ללא שינוי)
+            document.getElementById("bgInput").addEventListener("change", function (e) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    document.getElementById("capture").style.backgroundImage = `url(${event.target.result})`;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            });
+
+            function downloadImage() {
+                html2canvas(document.getElementById("capture"), { useCORS: true }).then((canvas) => {
+                    const link = document.createElement("a");
+                    link.download = "shabbat-times.png";
+                    link.href = canvas.toDataURL("image/png");
+                    link.click();
+                });
+            }
+
+            fetchTimes();
+        </script>
+    </body>
+</html>
