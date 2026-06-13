@@ -14,7 +14,11 @@
             <input type="file" id="bgInput" accept="image/*" />
             <button onclick="downloadImage()">הורד תמונה</button>
         </div>
-
+        <div class="controls" id="edit-controls" style="border: 1px solid #ccc; padding: 10px; margin-top: 10px">
+            <h3>עריכת זמנים ידנית:</h3>
+            <div id="edit-fields-container"></div>
+            <button onclick="applyChanges()" style="background: green">שמור שינויים</button>
+        </div>
         <div id="capture">
             <div class="top-section">
                 <img src="הצלה ללא גבולות.png" alt="Logo" class="logo-img" />
@@ -101,6 +105,50 @@
                 { name: "חיפה", lat: 32.794, lon: 34.9896 },
                 { name: "באר שבע", lat: 31.2529, lon: 34.7915 },
             ];
+            let shabbatData = [];
+
+            // פונקציה לרינדור הטבלה (מעדכנת את מה שרואים בתמונה)
+            function renderTable() {
+                const tbody = document.getElementById("shabbat-table");
+                tbody.innerHTML = "";
+
+                shabbatData.forEach((item, index) => {
+                    tbody.innerHTML += `<tr>
+            <td>${item.name}</td>
+            <td>${item.entry}</td>
+            <td>${item.exit}</td>
+            <td>${item.rt}</td>
+        </tr>`;
+                });
+            }
+
+            // פונקציה ליצירת תיבות עריכה
+            function createEditFields() {
+                const container = document.getElementById("edit-fields-container");
+                container.innerHTML = "";
+
+                shabbatData.forEach((item, index) => {
+                    container.innerHTML += `
+            <div style="margin-bottom: 5px; direction: rtl;">
+                <strong>${item.name}:</strong> 
+                <input type="text" id="entry-${index}" value="${item.entry}" size="5"> 
+                <input type="text" id="exit-${index}" value="${item.exit}" size="5"> 
+                <input type="text" id="rt-${index}" value="${item.rt}" size="5">
+            </div>
+        `;
+                });
+            }
+
+            // פונקציה ששומרת את השינויים
+            function applyChanges() {
+                shabbatData.forEach((item, index) => {
+                    item.entry = document.getElementById(`entry-${index}`).value;
+                    item.exit = document.getElementById(`exit-${index}`).value;
+                    item.rt = document.getElementById(`rt-${index}`).value;
+                });
+                renderTable(); // מעדכן את הטבלה בתמונה
+                alert("השינויים נשמרו בהצלחה!");
+            }
 
             async function fetchTimes() {
                 const tbody = document.getElementById("shabbat-table");
@@ -165,14 +213,16 @@
 
                             const format = (d) => d.toLocaleTimeString("he-IL", { hour: "2-digit", minute: "2-digit" });
 
-                            tbody.innerHTML += `<tr>
-                            <td>${city.name}</td>
-                            <td>${format(entryTime)}</td>
-                            <td>${format(exitTime)}</td>
-                            <td>${format(rtTime)}</td>
-                        </tr>`;
+                            shabbatData.push({
+                                name: city.name,
+                                entry: format(entryTime),
+                                exit: format(exitTime),
+                                rt: format(rtTime),
+                            });
                         }
                     }
+                    renderTable(); // רינדור ראשוני
+                    createEditFields();
                 } catch (e) {
                     console.error(e);
                 }
