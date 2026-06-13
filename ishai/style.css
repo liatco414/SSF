@@ -30,7 +30,7 @@ body {
 
 .glass-box {
     background: rgba(255, 255, 255, 0.728);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(1px);
     width: 85%; /* הקטנתי את הרוחב כדי שלא יהיה צמוד לקצוות */
     height: fit-content; /* התיבה מתאימה את עצמה לתוכן בדיוק */
     flex-grow: 0; /* מונע מהתיבה להימתח על כל השטח */
@@ -163,6 +163,22 @@ button {
     text-shadow: -1px -1px 0 #0d47a1, 1px -1px 0 #0d47a1, -1px 1px 0 #0d47a1, 1px 1px 0 #0d47a1, 0 0 3px #1565c0;
     margin-top: 2px;
     text-align: center; /* הטקסט עצמו במרכז */
+}
+
+/* בתוך style.css */
+#edit-fields-container input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 2px;
+    width: 60px; /* רוחב נוח לשעות */
+    text-align: center;
+}
+
+#edit-controls {
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }
 @media (max-width: 550px) {
     #capture {
